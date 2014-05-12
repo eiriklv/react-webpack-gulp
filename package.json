@@ -1,0 +1,22 @@
+{
+  "name": "react-webpack-gulp",
+  "version": "0.0.1",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "express": "^4.2.0",
+    "gulp": "^3.6.2",
+    "gulp-rimraf": "^0.1.0",
+    "gulp-util": "^2.2.14",
+    "gulp-watch": "^0.6.4",
+    "jsx-loader": "^0.10.2",
+    "tiny-lr": "0.0.7",
+    "webpack": "^1.1.10"
+  },
+  "dependencies": {
+    "envify": "^1.2.1",
+    "react": "^0.10.0"
+  }
+}
