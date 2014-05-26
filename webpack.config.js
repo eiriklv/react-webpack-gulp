@@ -16,6 +16,8 @@ module.exports = {
   },
   devtool: 'source-map',
   externals: {
+    // don't include React in the bundle. Use a CDN for this.
     'react': 'React'
-  }
+  },
+  plugins: []
 };
