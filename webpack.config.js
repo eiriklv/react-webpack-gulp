@@ -1,4 +1,5 @@
 'use strict';
+var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
@@ -19,5 +20,8 @@ module.exports = {
     // don't include React in the bundle. Use a CDN for this.
     'react': 'React'
   },
-  plugins: []
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.DedupePlugin()
+  ]
 };

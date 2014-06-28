@@ -2,15 +2,18 @@
 var gulp = require('gulp');
 var express = require('express');
 var path = require('path');
+var util = require('util');
 var gutil = require('gulp-util');
 var tinylr = require('tiny-lr');
 var rimraf = require('gulp-rimraf');
 var webpack = require('webpack');
+var webpackConfig = require('./webpack.config');
 
 var javascriptGlob = 'static/js/**/*';
 var assetsGlob = ['static/**/*', '!' + javascriptGlob];
 var buildDestination = 'dist';
-
+var liveReloadPort = 35729;
+var httpServerPort = 3000;
 
 gulp.task('clean', function () {
   return gulp.src(buildDestination, { read: false })
@@ -33,14 +36,14 @@ gulp.task('clean-copy-assets', ['clean'], function () {
   return copyAssets();
 });
 
-gulp.task('build', ['clean', 'clean-build-js', 'clean-copy-assets']);
+gulp.task('build', ['clean-build-js', 'clean-copy-assets']);
 
 gulp.task('default', ['build']);
 
 gulp.task('develop', ['build'], function (callback) {
-  liveReload(35729, function (err, lr) {
-    serve(buildDestination, 3000, function () {
-      gutil.log('http server listening on port 3000 (livereload port 35729)...');
+  liveReload(liveReloadPort, function (err, lr) {
+    serve(buildDestination, httpServerPort, function () {
+      gutil.log(util.format('http server listening on port %d (livereload port %d)...', liveReloadPort, httpServerPort));
 
       gulp.watch(javascriptGlob, ['build-js']);
 
@@ -53,8 +56,6 @@ gulp.task('develop', ['build'], function (callback) {
         gutil.log(gutil.colors.cyan(evt.path), 'changed');
         lr.changed({ body: { files: [ evt.path ] } });
       });
-
-      callback();
     });
   });
 });
@@ -73,12 +74,6 @@ function serve(rootPath, port, callback) {
 }
 
 function buildJavascript(callback) {
-  var webpackConfig = require('./webpack.config');
-  webpackConfig.plugins = webpackConfig.plugins.concat(
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin()
-  );
-
   webpack(webpackConfig, function (err, stats) {
     if (err) {
       throw new gutil.PluginError('[build-js]', err);
